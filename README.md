@@ -1,6 +1,4 @@
 # Typoitory a writing speed test.
-The words of the dicationary file are from this [repo](https://github.com/first20hours/google-10000-english)
+To run the application open the command line in the repos directory and then run `./typoitory`
 
-
-
-The code is under MIT license.
+The words in the dicationary file are from this [repo](https://github.com/first20hours/google-10000-english)

@@ -53,7 +53,7 @@ int main()
     // Calculate the word par seconds
     double wps = (float)correct_words / (float)(secs / 60.0);
 
-    printf("Correct:  %iw\nTime:     %is\n%.0fw/s\n", correct_words, secs, wps);
+    printf("Correct:  %iw\nTime:     %is\n%.0fw/min\n", correct_words, secs, wps);
 
     // Clear up memory
     freeMem();
