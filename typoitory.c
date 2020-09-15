@@ -13,6 +13,7 @@
 #define N 9894
 
 char *words[N];
+int word_count = 0;
 int correct_words = 0;
 
 // Prototypes
@@ -92,8 +93,7 @@ int load()
     }
 
     char word[20];
-    int i = 0;
-     
+
     // Scan a word at the time until the end of file 
     // and save in word var
     while (fscanf(f, "%s", word) != EOF)
@@ -101,13 +101,20 @@ int load()
         // Allocate memory 20 bytes
         char *mem = malloc(sizeof(char) * 20);
         if (mem == NULL)
-            return printf("No memory");
+        {
+            fclose(f);
+            freeMem();
+            return printf("No memory");  
+        }
 
         // Copy the 
         strcpy(mem, word);
-        words[i] = mem;
-        i++;
+        words[word_count] = mem;
+        word_count++;
     }
+
+    fclose(f);
+    
     return 0;
 }
 
@@ -144,7 +151,7 @@ int testRanWord(int i)
 int freeMem()
 {
     // Go throw every word and free it
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < word_count; i++)
     {
         free(words[i]);
     }
