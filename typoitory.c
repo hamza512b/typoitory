@@ -9,43 +9,52 @@
 #define GRN  "\x1B[32m"
 #define NRM  "\x1B[0m"
 
-#define MAX_INPUT 50 // TODO segemntation fault if is bigger
+// Max amount of charathers
+#define MAX_INPUT 50
+// Max amount of words
 #define N 9894
 
+// True and false
+#define TRUE 1
+#define FALSE 0
+
+// Array of char pointors (memoray addresses)
 char *words[N];
+
+// Statsitcs
 int word_count = 0;
 int correct_words = 0;
 
-// Prototypes
+// Prototypes (functions)
 int getInt(char *txt);
 int load();
 int testRanWord(int i);
 int freeMem();
 
-
+// Main function which get excuted when the pgrogams starts
 int main()
 {
     int num = 0;
 
     // Get intager
-    while (num == 0)
+    while (num == FALSE)
     {
         num = getInt("How many words? ");
     }
 
 
     // Load words into memory
-    load();
+    int file_status = load();
     
-    // Save curent UTC seconds 
+    if (file_status == FALSE) return FALSE;
+
+    // Save curent UTC timestamp 
     time_t start = time(NULL);
 
-    for (int i = 0; i < num; i++)
-    {
-        testRanWord(i);
-    }
+    // Promot a word an test num times
+    for (int i = 0; i < num; i++) testRanWord(i);
 
-    // Save curent UTC seconds 
+    // Save curent UTC timestamp 
     time_t end = time(NULL);
 
     // Seconds difeance
@@ -54,42 +63,44 @@ int main()
     // Calculate the word par seconds
     double wps = (float)correct_words / (float)(secs / 60.0);
 
+    // Print the resualts
     printf("Correct:  %iw\nTime:     %is\n%.0fw/min\n", correct_words, secs, wps);
 
-    // Clear up memory
+    // Free Up memory
     freeMem();
 }
 
 
-// Get a intenger 
+// Get amount for words that will be tested
 int getInt(char *txt)
 {
     printf("%s", txt);
 
     char str[MAX_INPUT];
+    
+    // copy to the chars array
     scanf("%s", str);
+
     char *str_r;
 
-    // Convert to intager
+    // parse intager (convert char to intager)
     int num = (int) strtol(str, &str_r, 10);
 
     // Check if string inludes more then ints
-    if (*str_r != '\0')
-        return 0;
-
-    return num;
+    if (*str_r != '\0') return FALSE;
+    else return num;
 }
 
 
-// Load words to an array
+// Load words to an array in memory
 int load()
 {
-    // Opent the  file
+    // Save words file to memory
     FILE *f = fopen("./dicationary.txt", "r");
     if (f == NULL)
     {
         printf("Can't open the file");
-        return 1;
+        return FALSE;
     }
 
     char word[20];
@@ -107,26 +118,27 @@ int load()
             return printf("No memory");  
         }
 
-        // Copy the 
+        // Copy the a word to somewhere in the array
         strcpy(mem, word);
         words[word_count] = mem;
         word_count++;
     }
 
+    // Remove file chunk from memory
     fclose(f);
     
-    return 0;
+    return TRUE;
 }
 
 
-// Test a word
+// Test a random word
 int testRanWord(int i)
 {
     // Get random word between 1-10 000
     srand(time(NULL) + i);
     int ran = rand() % (N - 1);
 
-    // Access a word using random number
+    // Access a word using the random number
     printf("%s\n", words[ran]);
 
     // Get user input
@@ -143,7 +155,7 @@ int testRanWord(int i)
         printf("%sFalse\n\n%s", RED, NRM);
     }
 
-    return 0;
+    return TRUE;
 }
 
 // Free upp memory used by the application after is
@@ -155,5 +167,5 @@ int freeMem()
     {
         free(words[i]);
     }
-    return 0;
+    return FALSE;
 }
